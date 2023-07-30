@@ -11,26 +11,16 @@ import { UserRepository } from './repositories/users.repository';
 export class UsersService {
   constructor(private userRepository: UserRepository) {}
 
-  userExists = async (email?: string, id?: string) => {
-    if (email) {
-      if (await this.userRepository.findByEmail(email)) {
-        throw new ConflictException('Email already exists!');
-      }
+  async create(data: CreateUserDto) {
+    const user = await this.userRepository.findByEmail(data.email);
+
+    if (user) {
+      throw new ConflictException('User already exists!');
     }
-    if (id) {
-      console.log('passou id');
-      if (await this.userRepository.findOne(id)) {
-        throw new NotFoundException('User not found!');
-      }
-    }
-  };
 
-  async create(createUserDto: CreateUserDto) {
-    await this.userExists(createUserDto.email);
+    const newUser = await this.userRepository.create({ ...data });
 
-    const user = await this.userRepository.create({ ...createUserDto });
-
-    return user;
+    return newUser;
   }
 
   async findAll() {
@@ -38,19 +28,35 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    this.userExists(id);
+    const user = await this.userRepository.findOne(id);
 
-    return await this.userRepository.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
+
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    return await this.userRepository.findByEmail(email);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    this.userExists(id);
+    const user = await this.userRepository.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
 
     await this.userRepository.update(id, updateUserDto);
   }
 
   async remove(id: string) {
-    this.userExists(id);
+    const user = await this.userRepository.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
 
     this.userRepository.delete(id);
   }

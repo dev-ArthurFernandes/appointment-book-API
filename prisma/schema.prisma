@@ -11,37 +11,36 @@ datasource db {
 }
 
 model User {
-  id            String   @id
+  id            String  @id
   firstName     String
   lastName      String
-  email         String   @unique
-  recoveryEmail String   @unique
+  email         String  @unique
+  recoveryEmail String  @unique
   password      String
-  phone1        String   @unique
-  phone2        String?  @unique
+  phone1        String  @unique
+  phone2        String? 
   avatarURL     String?
   addedAt       String
   deletedAt     String?
 
-  contacts Contact[]
+  contact Contact[]
 
   @@map("users")
 }
 
 model Contact {
-  id        String   @id
+  id        String  @id
   firstName String
-  lastName  String
-  email     String   @unique
-  email2    String?  @unique
-  password  String
-  phone1    String   @unique
-  phone2    String?  @unique
+  lastName  String?
+  email     String  @unique
+  email2    String? 
+  phone1    String  @unique
+  phone2    String?
   avatarURL String?
-  isBlocked Boolean? @default(false)
-  userId    String
+  isBlocked Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
+  userId String
 
   @@map("contacts")
 }

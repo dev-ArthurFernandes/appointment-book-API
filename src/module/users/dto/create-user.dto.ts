@@ -5,6 +5,7 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  IsOptional
 } from 'class-validator';
 import { hashSync } from 'bcryptjs';
 
@@ -40,16 +41,15 @@ export class CreateUserDto {
   password: string;
 
   @IsString()
-  @MinLength(13)
   @MaxLength(14)
   @IsNotEmpty()
   phone1: string;
 
   @IsString()
-  @MinLength(14)
-  @MaxLength(13)
+  @MaxLength(14)
   phone2?: string | null;
 
   @IsString()
+  @IsOptional()
   avatarURL?: string | null;
 }
