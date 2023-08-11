@@ -12,15 +12,19 @@ export class ContactsService {
   constructor(private contactRepository: ContactRepository) {}
 
   emailExists = async (email: string) => {
-    const contact = await this.contactRepository.findByEmail(email);
+    const contact = await this.contactRepository
+      .findByEmail(email)
+      .catch((err) => false);
 
-    return !!contact;
+    return contact;
   };
 
   findContact = async (id: string) => {
-    const contact = await this.contactRepository.findOne(id);
+    const contact = await this.contactRepository
+      .findOne(id)
+      .catch((err) => false);
 
-    return !!contact;
+    return contact;
   };
 
   async create(data: CreateContactDto, id: string) {

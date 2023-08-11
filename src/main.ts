@@ -6,6 +6,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:3001',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Appointment Book API')
     .setDescription('Your favorite site to manage your contacts')
